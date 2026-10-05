@@ -4,19 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import es.uam.esalud.sleepapp.datos.RepositorioEnMemoria
 
+/**
+ * Punto de entrada de la versión Android.
+ *
+ * Cambio de la sesión 2: el repositorio ya no es el de memoria, sino el de
+ * Room. Se obtiene con crearRepositorioRoom(), que está en AppDatabase.kt, en
+ * el módulo shared.
+ *
+ * El resto de la aplicación no se entera del cambio: App() sigue recibiendo
+ * un RepositorioSueno, como antes.
+ */
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Aquí se construyen las dependencias propias de Android y se inyectan
-        // en el App() común. En la sesión 2 el repositorio en memoria se
-        // sustituye por el de Room.
+        val repositorio = crearRepositorioRoom(applicationContext)
         val grabador = GrabadorAndroid(applicationContext)
-        val repositorio = RepositorioEnMemoria()
 
         setContent {
             App(grabador = grabador, repositorio = repositorio)
