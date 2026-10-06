@@ -6,7 +6,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import es.uam.esalud.sleepapp.SuenoViewModel
 import es.uam.esalud.sleepapp.audio.GrabadorAudio
+import es.uam.esalud.sleepapp.horaActual
+import es.uam.esalud.sleepapp.logica.Hora
 import es.uam.esalud.sleepapp.nombrePlataforma
 
 /**
@@ -15,12 +18,17 @@ import es.uam.esalud.sleepapp.nombrePlataforma
  * Los TODO numerados son vuestros. El resto está resuelto.
  */
 @Composable
-fun MainScreen(grabador: GrabadorAudio) {
+fun MainScreen(
+    grabador: GrabadorAudio,
+    viewModel: SuenoViewModel
+) {
 
     // `remember` + `mutableStateOf` = una variable que, al cambiar, hace que
     // Compose vuelva a dibujar lo que dependa de ella.
     var grabando by remember { mutableStateOf(false) }
     var ultimaRuta by remember { mutableStateOf<String?>(null) }
+    var horaInicio by remember { mutableStateOf(Hora(0, 0)) }
+    val registros by viewModel.registros.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -51,6 +59,7 @@ fun MainScreen(grabador: GrabadorAudio) {
             Button(
                 onClick = {
                     ultimaRuta=grabador.iniciar()
+                    horaInicio = horaActual()
                     grabando=true
                 },
                 enabled =! grabando
@@ -61,6 +70,11 @@ fun MainScreen(grabador: GrabadorAudio) {
                 onClick = {
                     grabador.detener()
                     grabando=false
+                    viewModel.guardar(
+                        inicio = horaInicio,
+                        fin = horaActual(),
+                        rutaAudio = ultimaRuta
+                    )
                 },
                 enabled = grabando
             ){
@@ -72,5 +86,7 @@ fun MainScreen(grabador: GrabadorAudio) {
 
         val mensaje = if (grabando) "Grabando..." else "En reposo"
         Text(text = mensaje)
+
+        ListaRegistros(registros)
     }
 }

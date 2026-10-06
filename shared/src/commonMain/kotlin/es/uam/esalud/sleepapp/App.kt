@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import es.uam.esalud.sleepapp.audio.GrabadorAudio
 import es.uam.esalud.sleepapp.datos.RepositorioSueno
 import es.uam.esalud.sleepapp.ui.MainScreen
+import androidx.compose.runtime.remember
 
 /**
  * Punto de entrada COMÚN de la aplicación.
@@ -21,9 +22,10 @@ fun App(
     grabador: GrabadorAudio,
     repositorio: RepositorioSueno
 ) {
+    val viewModel = remember { SuenoViewModel(repositorio) }
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
-            MainScreen(grabador = grabador)
+            MainScreen(grabador = grabador, viewModel = viewModel)
         }
     }
 }

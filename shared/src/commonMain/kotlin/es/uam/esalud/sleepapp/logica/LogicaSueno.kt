@@ -17,7 +17,14 @@ package es.uam.esalud.sleepapp.logica
  * medianoche (por ejemplo: acostarse a las 23:30 y levantarse a las 07:15).
  */
 fun duracionEnMinutos(inicio: Hora, fin: Hora): Int {
-    TODO("Ejercicio 1")
+    val inicioMinutos = inicio.desdeMedianoche()
+    val finMinutos = fin.desdeMedianoche()
+
+    return if (finMinutos > inicioMinutos) {
+        finMinutos - inicioMinutos
+    } else {
+        (24 * 60 - inicioMinutos) + finMinutos
+    }
 }
 
 /**
