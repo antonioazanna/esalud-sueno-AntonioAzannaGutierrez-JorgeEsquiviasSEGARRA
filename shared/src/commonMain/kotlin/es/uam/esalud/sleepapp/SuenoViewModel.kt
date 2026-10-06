@@ -45,10 +45,14 @@ class SuenoViewModel(
      */
     fun guardar(inicio: Hora, fin: Hora, rutaAudio: String?) {
         viewModelScope.launch {
-            // TODO (ejercicio 5)
-            // Construid un SleepRecord con los datos recibidos y pasádselo a
-            // repositorio.guardar(...). La fecha es ahoraEnMillis().
-            // Si os atascáis: pistas graduadas en el guion, apartado 5.4.
+            repositorio.guardar(
+                SleepRecord(
+                    fechaMillis = ahoraEnMillis(),
+                    inicio = inicio,
+                    fin = fin,
+                    rutaAudio = rutaAudio
+                )
+            )
         }
     }
 
