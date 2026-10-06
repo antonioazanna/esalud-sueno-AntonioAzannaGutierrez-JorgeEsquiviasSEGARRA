@@ -44,6 +44,11 @@ fun ListaRegistros(
                 //     Pista: un if normal sirve.
                 //
                 // Si os atascáis: pistas graduadas en el guion, parte 6.
+                Text("${registro.inicio} - ${registro.fin}")
+                Text("Duración: ${formatearMinutos(duracionEnMinutos(registro.inicio, registro.fin))}")
+                if (registro.rutaAudio == null) {
+                    Text("(grabación simulada)")
+                }
 
             }
             HorizontalDivider()
