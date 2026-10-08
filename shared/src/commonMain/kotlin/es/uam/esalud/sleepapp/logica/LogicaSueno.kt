@@ -20,7 +20,7 @@ fun duracionEnMinutos(inicio: Hora, fin: Hora): Int {
     val inicioMinutos = inicio.desdeMedianoche()
     val finMinutos = fin.desdeMedianoche()
 
-    return if (finMinutos > inicioMinutos) {
+    return if (finMinutos >= inicioMinutos) {
         finMinutos - inicioMinutos
     } else {
         (24 * 60 - inicioMinutos) + finMinutos
