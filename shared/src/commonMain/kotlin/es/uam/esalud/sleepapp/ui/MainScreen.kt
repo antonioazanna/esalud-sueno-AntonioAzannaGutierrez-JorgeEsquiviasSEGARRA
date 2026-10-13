@@ -20,7 +20,8 @@ import es.uam.esalud.sleepapp.nombrePlataforma
 @Composable
 fun MainScreen(
     grabador: GrabadorAudio,
-    viewModel: SuenoViewModel
+    viewModel: SuenoViewModel,
+    onRegistroClick: (Long) -> Unit
 ) {
 
     // `remember` + `mutableStateOf` = una variable que, al cambiar, hace que
@@ -28,6 +29,8 @@ fun MainScreen(
     var grabando by remember { mutableStateOf(false) }
     var ultimaRuta by remember { mutableStateOf<String?>(null) }
     var horaInicio by remember { mutableStateOf(Hora(0, 0)) }
+    var horaFin by remember { mutableStateOf(Hora(0, 0)) }
+    var mostrarDialogo by remember { mutableStateOf(false) }
     val registros by viewModel.registros.collectAsState()
 
     Column(
@@ -69,12 +72,9 @@ fun MainScreen(
             Button(
                 onClick = {
                     grabador.detener()
-                    grabando=false
-                    viewModel.guardar(
-                        inicio = horaInicio,
-                        fin = horaActual(),
-                        rutaAudio = ultimaRuta
-                    )
+                    grabando = false
+                    horaFin = horaActual()
+                    mostrarDialogo = true
                 },
                 enabled = grabando
             ){
@@ -87,6 +87,29 @@ fun MainScreen(
         val mensaje = if (grabando) "Grabando..." else "En reposo"
         Text(text = mensaje)
 
-        ListaRegistros(registros)
+        ListaRegistros(
+            registros,
+            onRegistroClick = onRegistroClick
+        )
+    }
+
+    if (mostrarDialogo) {
+        DialogoValoracion(
+            inicio = horaInicio,
+            fin = horaFin,
+            onGuardar = { calidad, minutosDespierto ->
+                viewModel.guardar(
+                    inicio = horaInicio,
+                    fin = horaFin,
+                    rutaAudio = ultimaRuta,
+                    calidadPercibida = calidad,
+                    minutosDespierto = minutosDespierto
+                )
+                mostrarDialogo = false
+            },
+            onCancelar = {
+                mostrarDialogo = false
+            }
+        )
     }
 }

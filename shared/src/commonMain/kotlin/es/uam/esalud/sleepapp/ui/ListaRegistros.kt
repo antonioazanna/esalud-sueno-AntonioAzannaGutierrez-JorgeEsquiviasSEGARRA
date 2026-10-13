@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import es.uam.esalud.sleepapp.datos.SleepRecord
 import es.uam.esalud.sleepapp.logica.duracionEnMinutos
+import androidx.compose.foundation.clickable
 
 /**
  * Lista de registros de sueño.
@@ -24,12 +25,17 @@ import es.uam.esalud.sleepapp.logica.duracionEnMinutos
 @Composable
 fun ListaRegistros(
     registros: List<SleepRecord>,
+    onRegistroClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         items(registros) { registro ->
-            Column(modifier = Modifier.padding(vertical = 8.dp)) {
-
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onRegistroClick(registro.id) }
+                    .padding(vertical = 8.dp)
+            ) {
                 // EJERCICIO 6
                 // Mostrad aquí, con elementos Text:
                 //
