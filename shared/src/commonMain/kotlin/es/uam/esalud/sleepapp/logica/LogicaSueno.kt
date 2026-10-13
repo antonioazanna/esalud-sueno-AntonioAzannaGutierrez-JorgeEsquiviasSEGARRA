@@ -33,5 +33,12 @@ fun duracionEnMinutos(inicio: Hora, fin: Hora): Int {
  * @throws IllegalArgumentException si [minutosEnCama] no es positivo.
  */
 fun eficiencia(minutosDormido: Int, minutosEnCama: Int): Double {
-    TODO("Ejercicio 2")
+    require(minutosEnCama > 0) {
+        "Los minutos en cama deben ser positivos"
+    }
+    require(minutosDormido in 0..minutosEnCama) {
+        "Los minutos dormido deben estar entre 0 y los minutos en cama"
+    }
+
+    return minutosDormido.toDouble() / minutosEnCama * 100.0
 }
