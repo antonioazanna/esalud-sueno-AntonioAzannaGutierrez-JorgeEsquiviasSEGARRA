@@ -1,3 +1,4 @@
+
 package es.uam.esalud.sleepapp.ui
 
 import androidx.compose.foundation.layout.*
@@ -14,13 +15,14 @@ import es.uam.esalud.sleepapp.nombrePlataforma
 
 /**
  * SESIÓN 1 - PANTALLA PRINCIPAL
- *
  * Los TODO numerados son vuestros. El resto está resuelto.
  */
 @Composable
 fun MainScreen(
     grabador: GrabadorAudio,
     viewModel: SuenoViewModel,
+    correoUsuario: String,
+    onCerrarSesion: () -> Unit,
     onRegistroClick: (Long) -> Unit
 ) {
 
@@ -38,6 +40,24 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
+        // Correo del usuario y botón para cerrar sesión
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = correoUsuario,
+                style = MaterialTheme.typography.bodySmall
+            )
+
+            TextButton(onClick = onCerrarSesion) {
+                Text("Cerrar sesión")
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
 
         Text(
             text = "Registro de sueño",
@@ -58,17 +78,17 @@ fun MainScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Button(
                 onClick = {
-                    ultimaRuta=grabador.iniciar()
+                    ultimaRuta = grabador.iniciar()
                     horaInicio = horaActual()
-                    grabando=true
+                    grabando = true
                 },
-                enabled =! grabando
+                enabled = !grabando
             ) {
                 Text("Iniciar grabación")
             }
+
             Button(
                 onClick = {
                     grabador.detener()
@@ -77,7 +97,7 @@ fun MainScreen(
                     mostrarDialogo = true
                 },
                 enabled = grabando
-            ){
+            ) {
                 Text("Detener grabación")
             }
         }
@@ -113,3 +133,4 @@ fun MainScreen(
         )
     }
 }
+

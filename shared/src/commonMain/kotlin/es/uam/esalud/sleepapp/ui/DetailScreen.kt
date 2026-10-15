@@ -1,3 +1,4 @@
+
 package es.uam.esalud.sleepapp.ui
 
 import androidx.compose.foundation.layout.*
@@ -6,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import es.uam.esalud.sleepapp.audio.ReproductorAudio
 import es.uam.esalud.sleepapp.datos.SleepRecord
 import es.uam.esalud.sleepapp.logica.duracionEnMinutos
 import es.uam.esalud.sleepapp.logica.eficiencia
@@ -13,6 +15,7 @@ import es.uam.esalud.sleepapp.logica.eficiencia
 @Composable
 fun DetailScreen(
     registro: SleepRecord,
+    reproductor: ReproductorAudio,
     onVolver: () -> Unit
 ) {
     val tiempoEnCama = duracionEnMinutos(
@@ -57,6 +60,13 @@ fun DetailScreen(
             Spacer(Modifier.height(8.dp))
             Text("Grabación simulada")
         }
+
+        // Reproducción de la grabación asociada al registro
+        Spacer(Modifier.height(8.dp))
+        BotonReproducir(
+            ruta = registro.rutaAudio,
+            reproductor = reproductor
+        )
 
         Spacer(Modifier.height(24.dp))
         HorizontalDivider()

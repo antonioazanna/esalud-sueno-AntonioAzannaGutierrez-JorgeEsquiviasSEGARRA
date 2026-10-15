@@ -18,14 +18,18 @@ interface GrabadorAudio {
     fun detener()
 }
 
-/** Implementación de mentira, para desarrollar sin micrófono ni permisos. */
+/**
+ * Implementación de mentira, para desarrollar sin micrófono ni permisos.
+ *
+ * Cambio de la sesión 4: devuelve null en lugar de un nombre de fichero
+ * inventado. No graba nada, así que no hay ningún fichero; con null, el
+ * registro queda marcado como grabación simulada y la pantalla de detalle no
+ * ofrece reproducirlo.
+ */
 class GrabadorSimulado : GrabadorAudio {
 
-    private var contador = 0
-
     override fun iniciar(): String? {
-        contador++
-        return "simulado_$contador.3gp"
+        return null
     }
 
     override fun detener() {

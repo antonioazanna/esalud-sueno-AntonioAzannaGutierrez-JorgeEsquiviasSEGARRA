@@ -11,6 +11,12 @@ import kotlinx.serialization.Serializable
  *     noche. Es lo que permite calcular la eficiencia del sueño, porque el
  *     tiempo en cama y el tiempo dormido no son lo mismo.
  *
+ * Campo nuevo en la sesión 4:
+ *   - usuarioId: el identificador (uid) que Firebase asigna al usuario que
+ *     creó el registro. Permite que cada usuario vea solo los suyos. Los
+ *     registros anteriores a esta sesión lo tienen vacío y no pertenecen a
+ *     nadie.
+ *
  * La anotación `@Serializable` le pide al compilador que genere el código que
  * convierte esta clase a texto JSON y vuelta. Es lo que permite guardar los
  * registros en escritorio y en web (ver `RepositorioJson`). El tipo `Hora`
@@ -24,5 +30,6 @@ data class SleepRecord(
     val fin: Hora,
     val rutaAudio: String? = null,
     val calidadPercibida: Int? = null,
-    val minutosDespierto: Int = 0
+    val minutosDespierto: Int = 0,
+    val usuarioId: String = ""
 )

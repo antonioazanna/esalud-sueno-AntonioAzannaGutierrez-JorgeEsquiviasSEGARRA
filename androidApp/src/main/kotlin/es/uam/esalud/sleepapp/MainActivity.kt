@@ -29,20 +29,20 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // EJERCICIO 2
-        // Lanzad aquí la petición del permiso de grabación de audio.
-        // Pista: peticionPermiso.launch(Manifest.permission.XXXXX)
-        // El nombre del permiso es el mismo que habéis declarado en el
-        // AndroidManifest.xml en el ejercicio 1.
-
+        // Sesión 3, ejercicio 2
         peticionPermiso.launch(Manifest.permission.RECORD_AUDIO)
 
         // --- Dependencias de la aplicación ----------------------------------
         val repositorio = crearRepositorioRoom(applicationContext)
         val grabador = GrabadorAndroid(applicationContext)
+        val reproductor = ReproductorAndroid()     // sesión 4
 
         setContent {
-            App(grabador = grabador, repositorio = repositorio)
+            App(
+                grabador = grabador,
+                repositorio = repositorio,
+                reproductor = reproductor
+            )
         }
     }
 }

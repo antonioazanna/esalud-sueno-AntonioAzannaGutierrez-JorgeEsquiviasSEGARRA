@@ -1,6 +1,8 @@
+
 package es.uam.esalud.sleepapp
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
@@ -8,7 +10,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import es.uam.esalud.sleepapp.audio.GrabadorAudio
+import es.uam.esalud.sleepapp.audio.ReproductorAudio
+import es.uam.esalud.sleepapp.auth.SesionViewModel
 import es.uam.esalud.sleepapp.ui.DetailScreen
+import es.uam.esalud.sleepapp.ui.LoginScreen
 import es.uam.esalud.sleepapp.ui.MainScreen
 import kotlinx.serialization.Serializable
 
@@ -20,7 +25,12 @@ import kotlinx.serialization.Serializable
  * correcto. Esto se llama navegación con rutas de tipo seguro.
  *
  * `object` en lugar de `data class` cuando la pantalla no recibe nada.
+ *
+ * Ruta nueva en la sesión 4: RutaLogin, que pasa a ser la pantalla inicial.
  */
+@Serializable
+object RutaLogin
+
 @Serializable
 object RutaPrincipal
 
@@ -28,7 +38,7 @@ object RutaPrincipal
 data class RutaDetalle(val registroId: Long)
 
 /**
- * Mapa de pantallas de la aplicación. Viene dado.
+ * Mapa de pantallas de la aplicación.
  *
  * Tres piezas:
  *
@@ -37,28 +47,64 @@ data class RutaDetalle(val registroId: Long)
  *  - NavHost es el contenedor: declara qué pantalla se muestra al arrancar
  *    (startDestination) y qué rutas existen.
  *  - composable<Ruta> { } define cada pantalla.
- *
- * Para ir al detalle se construye el objeto con el dato dentro,
- * `navigate(RutaDetalle(7))`, y la pantalla de destino lo recupera con
- * `toRoute()`. Así se pasa información de una pantalla a otra.
  */
 @Composable
 fun NavegacionApp(
     grabador: GrabadorAudio,
-    viewModel: SuenoViewModel
+    reproductor: ReproductorAudio,
+    viewModel: SuenoViewModel,
+    sesion: SesionViewModel
 ) {
     val navController = rememberNavController()
     val registros by viewModel.registros.collectAsState()
+    val usuario by sesion.usuario.collectAsState()
 
     NavHost(
         navController = navController,
-        startDestination = RutaPrincipal
+        startDestination = RutaLogin
     ) {
+        composable<RutaLogin> {
+            // LaunchedEffect ejecuta el bloque cada vez que cambia el valor
+            // entre paréntesis. Cuando el inicio de sesión tiene éxito,
+            // `usuario` deja de ser null y hay que ir a la pantalla principal.
+            LaunchedEffect(usuario) {
+                val actual = usuario
+                if (actual != null) {
+                    viewModel.cambiarUsuario(actual.uid)
+
+                    // EJERCICIO 4
+                    // Si os atascáis: pistas graduadas en el guion, parte 3.
+                    //
+                    // Navegad a RutaPrincipal eliminando RutaLogin del
+                    // historial. El cierre de sesión, más abajo, hace lo mismo
+                    // en sentido contrario: usadlo de modelo.
+                    navController.navigate(RutaPrincipal) {
+                        popUpTo(RutaLogin) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+            LoginScreen(sesion = sesion)
+        }
 
         composable<RutaPrincipal> {
             MainScreen(
                 grabador = grabador,
                 viewModel = viewModel,
+                correoUsuario = usuario?.email ?: "",
+                onCerrarSesion = {
+                    sesion.cerrarSesion()
+                    viewModel.cambiarUsuario(null)
+
+                    // Al cerrar sesión se vuelve al inicio de sesión y se
+                    // elimina la pantalla principal del historial: el botón
+                    // de volver no debe devolver a los datos del usuario
+                    // que acaba de salir.
+                    navController.navigate(RutaLogin) {
+                        popUpTo(RutaPrincipal) { inclusive = true }
+                    }
+                },
                 onRegistroClick = { id ->
                     navController.navigate(RutaDetalle(id))
                 }
@@ -72,9 +118,11 @@ fun NavegacionApp(
             if (registro != null) {
                 DetailScreen(
                     registro = registro,
+                    reproductor = reproductor,
                     onVolver = { navController.popBackStack() }
                 )
             }
         }
     }
 }
+

@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.Flow
 /**
  * La entidad: representa una FILA de la tabla.
  *
- * Gana una columna en la sesión 3: minutosDespierto.
+ * Gana una columna en la sesión 3, minutosDespierto, y otra en la sesión 4,
+ * usuarioId.
  */
 @Entity(tableName = "sleep_records")
 data class SleepRecordEntity(
@@ -22,7 +23,8 @@ data class SleepRecordEntity(
     val finMinutos: Int,
     val rutaAudio: String?,
     val calidadPercibida: Int?,
-    val minutosDespierto: Int
+    val minutosDespierto: Int,
+    val usuarioId: String
 )
 
 fun SleepRecordEntity.aModelo() = SleepRecord(
@@ -32,7 +34,8 @@ fun SleepRecordEntity.aModelo() = SleepRecord(
     fin = Hora.desdeMinutos(finMinutos),
     rutaAudio = rutaAudio,
     calidadPercibida = calidadPercibida,
-    minutosDespierto = minutosDespierto
+    minutosDespierto = minutosDespierto,
+    usuarioId = usuarioId
 )
 
 fun SleepRecord.aEntidad() = SleepRecordEntity(
@@ -42,7 +45,8 @@ fun SleepRecord.aEntidad() = SleepRecordEntity(
     finMinutos = fin.desdeMedianoche(),
     rutaAudio = rutaAudio,
     calidadPercibida = calidadPercibida,
-    minutosDespierto = minutosDespierto
+    minutosDespierto = minutosDespierto,
+    usuarioId = usuarioId
 )
 
 @Dao
