@@ -1,3 +1,4 @@
+
 package es.uam.esalud.sleepapp
 
 import androidx.lifecycle.ViewModel
@@ -38,8 +39,14 @@ class SuenoViewModel(
             //
             // Ahora se devuelve la lista entera. Sustituid la línea siguiente
             // por una que devuelva solo los registros cuyo usuarioId sea uid.
-            lista
-        }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+            lista.filter { registro ->
+                uid != null && registro.usuarioId == uid
+            }
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            emptyList()
+        )
 
     /** Se llama al iniciar sesión (con el uid) y al cerrarla (con null). */
     fun cambiarUsuario(uid: String?) {
@@ -77,6 +84,8 @@ class SuenoViewModel(
     }
 
     fun borrar(id: Long) {
-        viewModelScope.launch { repositorio.borrar(id) }
+        viewModelScope.launch {
+            repositorio.borrar(id)
+        }
     }
 }

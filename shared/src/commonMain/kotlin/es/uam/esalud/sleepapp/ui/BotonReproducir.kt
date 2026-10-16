@@ -1,3 +1,4 @@
+
 package es.uam.esalud.sleepapp.ui
 
 import androidx.compose.material3.*
@@ -21,19 +22,40 @@ fun BotonReproducir(
     // Si el usuario sale de la pantalla mientras suena, se detiene. Es el
     // ciclo de vida de la sesión 3 aplicado a un elemento de la pantalla.
     DisposableEffect(Unit) {
-        onDispose { reproductor.detener() }
+        onDispose {
+            reproductor.detener()
+        }
     }
 
     if (ruta != null) {
         // EJERCICIO 6
         // Si os atascáis: pistas graduadas en el guion, parte 5.
         //
-        // Un Button que, al pulsarlo:
-        //   - si está reproduciendo: detiene el reproductor y pone
-        //     reproduciendo a false
-        //   - si no: pone reproduciendo a true y llama a
-        //     reproductor.reproducir(ruta, alTerminar = { reproduciendo = false })
-        // Su texto es "Detener reproducción" o "Reproducir grabación" según
-        // el valor de reproduciendo.
+        // Botón para iniciar o detener la reproducción.
+        Button(
+            onClick = {
+                if (reproduciendo) {
+                    reproductor.detener()
+                    reproduciendo = false
+                } else {
+                    reproduciendo = true
+                    reproductor.reproducir(
+                        ruta,
+                        alTerminar = {
+                            reproduciendo = false
+                        }
+                    )
+                }
+            }
+        ) {
+            Text(
+                if (reproduciendo) {
+                    "Detener reproducción"
+                } else {
+                    "Reproducir grabación"
+                }
+            )
+        }
     }
 }
+

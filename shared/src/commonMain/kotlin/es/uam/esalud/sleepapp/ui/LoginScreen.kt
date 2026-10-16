@@ -1,3 +1,4 @@
+
 package es.uam.esalud.sleepapp.ui
 
 import androidx.compose.foundation.layout.*
@@ -27,11 +28,12 @@ fun LoginScreen(sesion: SesionViewModel) {
     val cargando by sesion.cargando.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Text(
             text = "Registro de sueño",
             style = MaterialTheme.typography.headlineMedium
@@ -61,12 +63,17 @@ fun LoginScreen(sesion: SesionViewModel) {
         // EJERCICIO 3
         // Si os atascáis: pistas graduadas en el guion, parte 3.
         //
-        // Añadid aquí el campo de la contraseña, con el mismo patrón que el
-        // del correo. Diferencias:
-        //   - la variable de estado es `password` y la etiqueta, "Contraseña"
-        //   - visualTransformation = PasswordVisualTransformation(), para que
-        //     se vean puntos en lugar de las letras
-        //   - el tipo de teclado es KeyboardType.Password
+        // Añadimos el campo de la contraseña siguiendo el mismo patrón
+        // que el campo del correo electrónico.
+        OutlinedTextField(
+            value = password,
+            onValueChange = { nuevo -> password = nuevo },
+            label = { Text("Contraseña") },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(Modifier.height(16.dp))
 
@@ -84,14 +91,18 @@ fun LoginScreen(sesion: SesionViewModel) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                onClick = { sesion.iniciarSesion(email.trim(), password) },
+                onClick = {
+                    sesion.iniciarSesion(email.trim(), password)
+                },
                 enabled = !cargando
             ) {
                 Text("Entrar")
             }
 
             OutlinedButton(
-                onClick = { sesion.crearCuenta(email.trim(), password) },
+                onClick = {
+                    sesion.crearCuenta(email.trim(), password)
+                },
                 enabled = !cargando
             ) {
                 Text("Crear cuenta")
@@ -104,3 +115,4 @@ fun LoginScreen(sesion: SesionViewModel) {
         }
     }
 }
+

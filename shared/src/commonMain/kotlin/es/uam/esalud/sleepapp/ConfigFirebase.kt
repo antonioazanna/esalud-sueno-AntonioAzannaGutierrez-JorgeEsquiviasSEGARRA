@@ -12,4 +12,4 @@ package es.uam.esalud.sleepapp
  * extraerla. La seguridad no depende de ocultarla, sino de lo que el proyecto
  * permite hacer con ella.
  */
-const val FIREBASE_API_KEY = "PEGAD_AQUI_LA_CLAVE_DE_API_WEB"
+const val FIREBASE_API_KEY = "AIzaSyACdatogzdUGfAXnY_Z4imjQ_NaoNNetis"
