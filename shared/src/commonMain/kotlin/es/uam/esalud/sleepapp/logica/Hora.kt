@@ -5,15 +5,9 @@ import kotlinx.serialization.Serializable
 /**
  * Una hora del día, sin fecha.
  *
- * `data class` es la forma que tiene Kotlin de declarar un tipo que solo
- * agrupa datos. Equivale, más o menos, a un `@dataclass` de Python.
- *
- * El bloque `init` se ejecuta al construir el objeto: `require` lanza una
- * excepción si la condición no se cumple. Así es imposible que exista un
- * objeto Hora inválido.
- *
  * `@Serializable` por la misma razón que en `SleepRecord`: es un campo suyo y
- * hay que saber convertirlo a JSON. Se guarda como `{ "horas": 23, "minutos": 30 }`.
+ * hay que saber convertirlo a JSON. Se guarda como un objeto con dos números:
+ * `{ "horas": 23, "minutos": 30 }`.
  */
 @Serializable
 data class Hora(val horas: Int, val minutos: Int) {
